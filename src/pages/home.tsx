@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, ChevronRight, Star, Clock, Award } from 'lucide-react';
+import { Shield, ChevronRight, Star, Clock, Award, ChevronLeft } from 'lucide-react';
 import Navbar from "../components/navbar";
+import SlideShow  from '../components/slideshow';
 
 interface Threat {
   id: number;
@@ -11,6 +12,12 @@ interface Threat {
 interface ShieldPosition {
   x: number;
   y: number;
+}
+
+interface Review {
+  quote: string;
+  author: string;
+  role: string;
 }
 
 const Threat: React.FC<{ x: number; y: number }> = ({ x, y }) => (
@@ -24,30 +31,47 @@ const Threat: React.FC<{ x: number; y: number }> = ({ x, y }) => (
   />
 );
 
-const Testimonial: React.FC<{ quote: string; author: string; role: string }> = ({ quote, author, role }) => (
-  <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-    <div className="flex text-yellow-400 mb-4">
-      {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
-    </div>
-    <p className="text-gray-300 italic mb-4">"{quote}"</p>
-    <p className="text-cyan-300 font-semibold">{author}</p>
-    <p className="text-gray-400 text-sm">{role}</p>
-  </div>
-);
-
-const TrustReason: React.FC<{ icon: React.ReactNode; title: string; description: string }> = ({ icon, title, description }) => (
-  <div className="flex items-start">
-    <div className="text-cyan-400 mr-4">{icon}</div>
-    <div>
-      <h4 className="text-lg font-semibold text-white mb-2">{title}</h4>
-      <p className="text-gray-300">{description}</p>
-    </div>
-  </div>
-);
-
 const Home: React.FC = () => {
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [threats, setThreats] = useState<Threat[]>([]);
   const [shieldPosition, setShieldPosition] = useState<ShieldPosition>({ x: 50, y: 50 });
+
+  const heroSlides = [
+    './src/assets/hero.png',
+    './src/assets/hero2.png',
+    './src/assets/hero3.png',
+  ];
+
+  const reviews: Review[] = [
+    { quote: "SafeScan has given me peace of mind I never knew I needed. Their protection is top-notch!", author: "Dannele Frey", role: "Small Business Owner" },
+    { quote: "As a tech enthusiast, I've tried many antiviruses. SafeScan is by far the most comprehensive and user-friendly.", author: "Felix Dean", role: "Software Developer" },
+    { quote: "Implementing SafeScan across our organization has significantly reduced our cybersecurity incidents.", author: "Diana Ford", role: "IT Director, FZ Corp" },
+    { quote: "I feel so much safer browsing the internet since I started using SafeScan. It's a game-changer!", author: "Mike Johnson", role: "Freelance Writer" },
+    { quote: "The customer support team at SafeScan is phenomenal. They're always there when you need them.", author: "Sarah Thompson", role: "E-commerce Entrepreneur" },
+    { quote: "SafeScan's real-time protection has saved me from several potential threats. It's worth every penny.", author: "Alex Chen", role: "Graphic Designer" },
+    { quote: "As a parent, I appreciate how SafeScan helps me keep my kids safe online. It's a must-have for families.", author: "Emily Rodriguez", role: "Mother of 3" },
+    { quote: "The ease of use combined with powerful protection makes SafeScan stand out from other antivirus solutions.", author: "Chris Taylor", role: "IT Consultant" },
+    { quote: "I've recommended SafeScan to all my clients. It's the best cybersecurity solution for small businesses.", author: "Jessica Lee", role: "Business Coach" },
+    { quote: "SafeScan's regular updates give me confidence that I'm always protected against the latest threats.", author: "Robert Wilson", role: "Retired Teacher" },
+  ];
+
+  const totalSlides = Math.ceil(reviews.length / 2);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentReviewIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+    }, 5000);
+      
+    return () => clearInterval(timer);
+  }, [totalSlides]);
+
+  const goToPreviousReview = () => {
+    setCurrentReviewIndex((prevIndex) => (prevIndex - 1 + reviews.length) % totalSlides);
+  };
+
+  const goToNextReview = () => {
+    setCurrentReviewIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,13 +102,18 @@ const Home: React.FC = () => {
       <Navbar activeItem="Home" />
 
       {/* Hero Section */}
-      <header className="bg-gray-800 py-20">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl font-bold mb-4">Secure Your Digital World with SafeScan</h1>
-          <p className="text-xl mb-8">Advanced antivirus solutions for personal and business use</p>
-          <button className="bg-cyan-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-cyan-500 transition duration-300 flex items-center mx-auto">
-            Get Started <ChevronRight className="ml-2" />
-          </button>
+      <header className="relative h-[60vh]"> 
+        <SlideShow images={heroSlides} interval={5000}/>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Secure Your Digital World with SafeScan</h1>
+            <p className="text-xl mb-8">Advanced antivirus solutions for personal and business use</p>
+            <a href='/products'>
+              <button className="bg-cyan-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-cyan-500 transition duration-300 flex items-center mx-auto">
+                  Get Started
+              </button>             
+            </a>
+          </div>
         </div>
       </header>
 
@@ -143,45 +172,71 @@ const Home: React.FC = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Why Trust SafeScan?</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <TrustReason 
-              icon={<Shield size={24} />}
-              title="Advanced Protection"
-              description="Our cutting-edge technology provides unparalleled security against the latest cyber threats."
-            />
-            <TrustReason 
-              icon={<Clock size={24} />}
-              title="24/7 Support"
-              description="Our dedicated team is always available to assist you with any security concerns."
-            />
-            <TrustReason 
-              icon={<Award size={24} />}
-              title="Industry Recognition"
-              description="Multiple awards for our innovative approach to cybersecurity."
-            />
-            <TrustReason 
-              icon={<Star size={24} />}
-              title="Customer Satisfaction"
-              description="97% of our customers report improved peace of mind after choosing SafeScan."
-            />
+            <div className="flex items-start">
+              <Shield className="text-cyan-400 mr-4" size={24} />
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Advanced Protection</h4>
+                <p className="text-gray-300">Our cutting-edge technology provides unparalleled security against the latest cyber threats.</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <Clock className="text-cyan-400 mr-4" size={24} />
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">24/7 Support</h4>
+                <p className="text-gray-300">Our dedicated team is always available to assist you with any security concerns.</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <Award className="text-cyan-400 mr-4" size={24} />
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Industry Recognition</h4>
+                <p className="text-gray-300">Multiple awards for our innovative approach to cybersecurity.</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <Shield className="text-cyan-400 mr-4" size={24} />
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Customer Satisfaction</h4>
+                <p className="text-gray-300">97% of our customers report improved peace of mind after choosing SafeScan.</p>
+              </div>
+            </div>
           </div>
 
           <h3 className="text-2xl font-semibold text-center mb-8">What Our Customers Say</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Testimonial 
-              quote="SafeScan has given me peace of mind I never knew I needed. Their protection is top-notch!"
-              author="Dannele Frey"
-              role="Small Business Owner"
-            />
-            <Testimonial 
-              quote="As a tech enthusiast, I've tried many antiviruses. SafeScan is by far the most comprehensive and user-friendly."
-              author="Felix Dean"
-              role="Software Developer"
-            />
-            <Testimonial 
-              quote="Implementing SafeScan across our organization has significantly reduced our cybersecurity incidents."
-              author="Diana Ford"
-              role="IT Director, FZ Corp"
-            />
+          <div className="relative w-full overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out" 
+              style={{ transform: `translateX(-${currentReviewIndex * 100}%)` }}
+            >
+              {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+                <div key={slideIndex} className="w-full flex-shrink-0 px-4 flex space-x-4">
+                  {reviews.slice(slideIndex * 2, slideIndex * 2 + 2).map((review, index) => (
+                    <div key={index} className="w-1/2">
+                      <div className="bg-gray-800 p-6 rounded-lg shadow-lg h-full">
+                        <div className="flex text-yellow-400 mb-4">
+                          {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
+                        </div>
+                        <p className="text-gray-300 italic mb-4">"{review.quote}"</p>
+                        <p className="text-cyan-300 font-semibold">{review.author}</p>
+                        <p className="text-gray-400 text-sm">{review.role}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={goToPreviousReview}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+            >
+              <ChevronLeft />
+            </button>
+            <button
+              onClick={goToNextReview}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+            >
+              <ChevronRight />
+            </button>
           </div>
         </div>
       </section>

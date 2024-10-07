@@ -6,25 +6,30 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ activeItem }) => {
-  const navItems = ['Home', 'Products', 'About Us', 'Account'];
+  const navItems = [
+    { name: 'Home', path: '/'},
+    { name: 'Products', path: '/products'},
+    { name: 'About Us', path: '/about.html' },
+    { name: 'Account', path: '/account.html' }
+  ];
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-900 bg-opacity-80 p-4 sticky top-0 z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center">
+        <a href='/' className="flex items-center">
           <Shield className="w-8 h-8 text-cyan-400 mr-2" />
           <span className="text-xl font-bold text-gray-100">SafeScan</span>
-        </div>
+        </a>
         <div className="flex space-x-6">
           {navItems.map(item => (
             <a 
-              key={item} 
-              href="#" 
+              key={item.name} 
+              href={item.path}
               className={`transition duration-300 ${
-                activeItem === item ? 'text-cyan-300' : 'text-gray-100 hover:text-cyan-300'
+                activeItem === item.name ? 'text-cyan-300' : 'text-gray-100 hover:text-cyan-300'
               }`}
             >
-              {item}
+              {item.name}
             </a>
           ))}
         </div>
