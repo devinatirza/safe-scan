@@ -80,7 +80,7 @@ const Product: React.FC = () => {
   const personalPlans = [
     {
       name: "Individual",
-      price: "$19.99/year",
+      price: "$21.99/year",
       description: "Perfect for personal use on a single device",
       features: [
         "Real-time virus and malware protection",
@@ -92,12 +92,12 @@ const Product: React.FC = () => {
       type: 'individual' as const,
     },
     {
-      name: "Group (5-10 users)",
-      price: "$32.99/year",
+      name: "Group (3-5 users)",
+      price: "$59.99/year",
       description: "Ideal for families or small groups",
       features: [
         "All Individual plan features",
-        "Protection for up to 10 devices",
+        "Protection for up to 5 devices",
         "Parental controls",
         "Password manager",
         "VPN for secure browsing",
@@ -107,13 +107,14 @@ const Product: React.FC = () => {
       type: 'group' as const,
     },
     {
-      name: "Group (11-50 users)",
-      price: "$59.99/year",
-      description: "Perfect for larger families or small offices",
+      name: "Group (5-10 users)",
+      price: "$99.99/year",
+      description: "Perfect for larger families or community groups",
       features: [
         "All Group (5-10 users) features",
         "Protection for up to 50 devices",
         "Advanced parental controls",
+        "Shared account management",
         "Priority customer support"
       ],
       type: 'group' as const,
@@ -123,7 +124,7 @@ const Product: React.FC = () => {
   const businessPlans = [
     {
       name: "Small Business",
-      price: "$49.99/year per device",
+      price: "$119.99/year per device",
       description: "Tailored for small businesses and startups",
       features: [
         "Protection for up to 10 devices",

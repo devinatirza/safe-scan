@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Minus, Check } from 'lucide-react';
+import { Plus, Minus, Check, X } from 'lucide-react';
 import Navbar from "../components/navbar";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -23,9 +23,65 @@ interface FormErrors {
   zipCode?: string;
 }
 
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  planName: string;
+  totalPrice: number;
+}
+
+const ConfirmationModal: React.FC<ModalProps> = ({ isOpen, onClose, planName, totalPrice }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full relative animate-fade-in">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+        >
+          <X size={20} />
+        </button>
+
+        <div className="text-center">
+          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Check size={32} className="text-white" />
+          </div>
+          
+          <h2 className="text-2xl font-bold mb-4">Thank you for your purchase!</h2>
+          
+          <div className="bg-gray-700 rounded-lg p-4 mb-6">
+            <h3 className="text-lg font-semibold mb-2">Order Details</h3>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-300">Plan:</span>
+              <span className="font-medium">{planName}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-300">Total Price:</span>
+              <span className="font-medium">${totalPrice.toFixed(2)}</span>
+            </div>
+          </div>
+          
+          <p className="text-gray-300 mb-6">
+            Your purchase details will be sent to your email shortly.
+          </p>
+          
+          <button
+            onClick={onClose}
+            className="bg-cyan-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-cyan-500 transition duration-300"
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CheckoutForm: React.FC = () => {
   const data = useLocation().state;
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const planName = data.planName;
   const planPrice = data.planPrice;
@@ -146,22 +202,17 @@ const CheckoutForm: React.FC = () => {
     e.preventDefault();
     if (validateForm()) {
       console.log('Form submitted:', formData);
-      
-      alert(
-        "Thank you for your purchase!\n\n" +
-        "Your order details:\n" +
-        `Plan: ${planName}\n` +
-        `Total Price: $${totalPrice.toFixed(2)}\n\n` +
-        "Your purchase details will be sent to your email."
-      );
-
-      navigate('/');
+      setIsModalOpen(true);
     }
   };
 
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    navigate('/');
+  };
 
   return (
-    <div className="bg-gray-900 text-gray-100 min-h-dvh w-dvw">
+    <div className="bg-gray-900 text-gray-100 min-h-dvh w-dvw px-4 lg:px-0">
       <Navbar activeItem="Products" />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
@@ -339,6 +390,12 @@ const CheckoutForm: React.FC = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        planName={planName}
+        totalPrice={totalPrice}
+      />
     </div>
   );
 };
