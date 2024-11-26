@@ -24,7 +24,6 @@ const Navbar: React.FC<NavbarProps> = ({ activeItem }) => {
             <span className="text-xl font-bold text-gray-100">SafeScan</span>
           </a>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-6">
             {navItems.map(item => (
               <a
@@ -39,7 +38,6 @@ const Navbar: React.FC<NavbarProps> = ({ activeItem }) => {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden text-gray-100 hover:text-cyan-300"
@@ -49,7 +47,6 @@ const Navbar: React.FC<NavbarProps> = ({ activeItem }) => {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-0 bg-gray-900 bg-opacity-95 z-40">
           <div className="flex flex-col items-center justify-start pt-20 space-y-8">

@@ -38,10 +38,11 @@ const Home: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const heroSlides = [
-    './src/assets/hero.png',
-    './src/assets/hero2.png',
-    './src/assets/hero3.png',
+    '/safescan.png',
+    '/safescan2.png',
+    '/safescan3.png'
   ];
+
 
   const reviews: Review[] = [
     { quote: "SafeScan has given me peace of mind I never knew I needed. Their protection is top-notch!", author: "Dannele Frey", role: "Small Business Owner" },
@@ -56,9 +57,9 @@ const Home: React.FC = () => {
     { quote: "SafeScan's regular updates give me confidence that I'm always protected against the latest threats.", author: "Robert Wilson", role: "Retired Teacher" },
   ];
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  // const toggleMenu = () => {
+  //   setIsMenuOpen(!isMenuOpen);
+  // };
 
   const totalSlides = Math.ceil(reviews.length / 2);
 
@@ -104,16 +105,18 @@ const Home: React.FC = () => {
 
   return (
     <div className="bg-gray-900 text-gray-100 min-h-screen">
-      {/* Navbar */}
       <Navbar activeItem="Home" />
 
-      {/* Hero Section */}
-      <header className="relative min-h-[60vh] px-4 lg:px-0"> 
+      <header className="relative h-[450px] w-full"> 
         <SlideShow images={heroSlides} interval={5000}/>
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
           <div className="text-center px-4 lg:px-0">
-            <h1 className="text-2xl lg:text-4xl font-bold mb-4">Secure Your Digital World with SafeScan</h1>
-            <p className="text-lg lg:text-xl mb-8">Advanced antivirus solutions for personal and business use</p>
+            <h1 className="text-3xl lg:text-5xl font-bold mb-2">
+              Secure Your Digital World with SafeScan
+            </h1>
+            <p className="text-2sm lg:text-2xl mb-5">
+              Advanced antivirus solutions for personal and business use
+            </p>
             <a href='/products'>
               <button className="bg-cyan-600 text-white px-6 lg:px-8 py-3 rounded-full font-semibold hover:bg-cyan-500 transition duration-300 flex items-center mx-auto">
                 Get Started
@@ -123,8 +126,7 @@ const Home: React.FC = () => {
         </div>
       </header>
 
-      {/* About Company Section */}
-      <section className="py-12 lg:py-16 px-4 lg:px-0">
+      <section className="py-12 lg:py-16 px-4 lg:px-2">
         <div className="container mx-auto">
           <h1 className="text-3xl lg:text-4xl font-bold text-center mb-8">SafeScan</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -151,7 +153,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Achievements Section */}
       <section className="bg-gray-800 py-12 lg:py-16 px-4 lg:px-0">
         <div className="container mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-center mb-12">Our Achievements</h2>
@@ -172,7 +173,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Trust Section */}
       <section className="py-12 lg:py-16 px-4 lg:px-0">
         <div className="container mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-center mb-12">Why Trust SafeScan?</h2>
@@ -235,7 +235,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Packages Section */}
       <section className="py-12 lg:py-16 bg-gray-800 px-4 lg:px-0">
         <div className="container mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-center mb-8">Our Protection Packages</h2>
@@ -252,7 +251,6 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-800 py-8 px-4 lg:px-0">
         <div className="container mx-auto text-center">
           <p>&copy; 2024 SafeScan. All rights reserved.</p>

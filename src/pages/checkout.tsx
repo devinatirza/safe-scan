@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Minus, Check, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Plus, Minus, Check, X } from "lucide-react";
 import Navbar from "../components/navbar";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -30,7 +30,12 @@ interface ModalProps {
   totalPrice: number;
 }
 
-const ConfirmationModal: React.FC<ModalProps> = ({ isOpen, onClose, planName, totalPrice }) => {
+const ConfirmationModal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  planName,
+  totalPrice,
+}) => {
   if (!isOpen) return null;
 
   return (
@@ -47,9 +52,11 @@ const ConfirmationModal: React.FC<ModalProps> = ({ isOpen, onClose, planName, to
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <Check size={32} className="text-white" />
           </div>
-          
-          <h2 className="text-2xl font-bold mb-4">Thank you for your purchase!</h2>
-          
+
+          <h2 className="text-2xl font-bold mb-4">
+            Thank you for your purchase!
+          </h2>
+
           <div className="bg-gray-700 rounded-lg p-4 mb-6">
             <h3 className="text-lg font-semibold mb-2">Order Details</h3>
             <div className="flex justify-between mb-2">
@@ -61,11 +68,11 @@ const ConfirmationModal: React.FC<ModalProps> = ({ isOpen, onClose, planName, to
               <span className="font-medium">${totalPrice.toFixed(2)}</span>
             </div>
           </div>
-          
+
           <p className="text-gray-300 mb-6">
             Your purchase details will be sent to your email shortly.
           </p>
-          
+
           <button
             onClick={onClose}
             className="bg-cyan-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-cyan-500 transition duration-300"
@@ -95,21 +102,21 @@ const CheckoutForm: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState(planPrice);
 
   const [formData, setFormData] = useState<FormData>({
-    email: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    country: '',
-    city: '',
-    zipCode: ''
+    email: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    country: "",
+    city: "",
+    zipCode: "",
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   useEffect(() => {
-    fetch('https://restcountries.com/v3.1/all')
-      .then(response => response.json())
-      .then(data => {
+    fetch("https://restcountries.com/v3.1/all")
+      .then((response) => response.json())
+      .then((data) => {
         const sortedCountries = data
           .map((country: any) => country.name.common)
           .sort((a: string, b: string) => a.localeCompare(b));
@@ -119,47 +126,49 @@ const CheckoutForm: React.FC = () => {
 
   useEffect(() => {
     let price = planPrice;
-    
-    if (planType === 'individual') {
+
+    if (planType === "individual") {
       price = quantity >= 3 ? planPrice * 0.9 : planPrice;
       price *= quantity * years;
-    } else if (planType === 'group') {
+    } else if (planType === "group") {
       if (years >= 5) {
-        price *= 0.8; 
+        price *= 0.8;
       } else if (years >= 3) {
-        price *= 0.9; 
+        price *= 0.9;
       }
       price *= quantity * years;
-    } else if (planType === 'business') {
+    } else if (planType === "business") {
       if (years >= 5) {
         price *= 0.75;
       } else if (years >= 3) {
-        price *= 0.85; 
+        price *= 0.85;
       }
       price *= years;
     }
-    
+
     setTotalPrice(price);
   }, [quantity, years, planPrice, planType]);
 
   const handleQuantityChange = (change: number) => {
-    setQuantity(prev => Math.max(1, prev + change));
+    setQuantity((prev) => Math.max(1, prev + change));
   };
 
   const handleYearsChange = (change: number) => {
-    setYears(prev => Math.max(1, prev + change));
+    setYears((prev) => Math.max(1, prev + change));
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
 
-    setFormErrors(prevErrors => ({
+    setFormErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: undefined
+      [name]: undefined,
     }));
   };
 
@@ -167,31 +176,31 @@ const CheckoutForm: React.FC = () => {
     const errors: FormErrors = {};
 
     if (!formData.email.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = "Please enter a valid email address";
     }
 
     if (formData.firstName.trim().length < 4) {
-      errors.firstName = 'First name must be at least 4 characters long';
+      errors.firstName = "First name must be at least 4 characters long";
     }
 
     if (formData.lastName.trim().length < 2) {
-      errors.lastName = 'Last name must be at least 2 characters long';
+      errors.lastName = "Last name must be at least 2 characters long";
     }
 
     if (formData.address.trim().length < 10) {
-      errors.address = 'Please enter your address detail';
+      errors.address = "Please enter your address detail";
     }
 
     if (!formData.country) {
-      errors.country = 'Please select a country';
+      errors.country = "Please select a country";
     }
 
     if (formData.city.trim().length < 3) {
-      errors.city = 'Please enter a valid city name';
+      errors.city = "Please enter a valid city name";
     }
 
     if (!formData.zipCode.match(/^[0-9]{5}(-[0-9]{4})?$/)) {
-      errors.zipCode = 'Please enter a valid ZIP code';
+      errors.zipCode = "Please enter a valid ZIP code";
     }
 
     setFormErrors(errors);
@@ -201,14 +210,14 @@ const CheckoutForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Form submitted:', formData);
+      console.log("Form submitted:", formData);
       setIsModalOpen(true);
     }
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -216,11 +225,13 @@ const CheckoutForm: React.FC = () => {
       <Navbar activeItem="Products" />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-        
+
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-1/2">
             <div className="bg-gray-800 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold mb-4">Selected Plan: {planName}</h2>
+              <h2 className="text-2xl font-bold mb-4">
+                Selected Plan: {planName}
+              </h2>
               <p className="text-gray-300 mb-4">{planDesc}</p>
               <ul className="mb-6">
                 {planFeatures.map((feature, index) => (
@@ -230,48 +241,72 @@ const CheckoutForm: React.FC = () => {
                   </li>
                 ))}
               </ul>
-              {(planType === 'individual') && (
+              {planType === "individual" && (
                 <div className="flex items-center mb-4">
                   <span className="mr-4">Quantity:</span>
-                  <button onClick={() => handleQuantityChange(-1)} className="bg-cyan-600 text-white p-2 rounded-full">
+                  <button
+                    onClick={() => handleQuantityChange(-1)}
+                    className="bg-cyan-600 text-white p-2 rounded-full"
+                  >
                     <Minus size={16} />
                   </button>
                   <span className="mx-4">{quantity}</span>
-                  <button onClick={() => handleQuantityChange(1)} className="bg-cyan-600 text-white p-2 rounded-full">
+                  <button
+                    onClick={() => handleQuantityChange(1)}
+                    className="bg-cyan-600 text-white p-2 rounded-full"
+                  >
                     <Plus size={16} />
                   </button>
                 </div>
               )}
-              {(planType !== 'individual') && (
+              {planType !== "individual" && (
                 <div className="flex items-center mb-4">
                   <span className="mr-4">Subscription Years:</span>
-                  <button onClick={() => handleYearsChange(-1)} className="bg-cyan-600 text-white p-2 rounded-full">
+                  <button
+                    onClick={() => handleYearsChange(-1)}
+                    className="bg-cyan-600 text-white p-2 rounded-full"
+                  >
                     <Minus size={16} />
                   </button>
                   <span className="mx-4">{years}</span>
-                  <button onClick={() => handleYearsChange(1)} className="bg-cyan-600 text-white p-2 rounded-full">
+                  <button
+                    onClick={() => handleYearsChange(1)}
+                    className="bg-cyan-600 text-white p-2 rounded-full"
+                  >
                     <Plus size={16} />
                   </button>
                 </div>
               )}
-              <p className="text-xl font-bold">Total Price: ${totalPrice.toFixed(2)}/year</p>
-              {planType === 'individual' && quantity < 3 && (
-                <p className="text-sm text-gray-400">Get 10% discount for 3 or more licenses!</p>
-              )}
-              {planType === 'individual' && quantity >= 3 && (
-                <p className="text-sm text-green-400">10% discount applied for 3 or more licenses!</p>
-              )}
-              {planType === 'group' && years < 3 && (
-                <p className="text-sm text-gray-400">Add more subscription year to get special price!</p>
-              )}
-              {planType === 'group' && years >= 3 && (
-                <p className="text-sm text-green-400">
-                  {years >= 5 ? '20% discount applied for 5+ years subscription!' : '10% discount applied for 3-4 years subscription!'}
+              <p className="text-xl font-bold">
+                Total Price: ${totalPrice.toFixed(2)}/year
+              </p>
+              {planType === "individual" && quantity < 3 && (
+                <p className="text-sm text-gray-400">
+                  Get 10% discount for 3 or more licenses!
                 </p>
               )}
-              {planType === 'business' && years >= 3 && (
+              {planType === "individual" && quantity >= 3 && (
                 <p className="text-sm text-green-400">
-                  {years >= 5 ? '25% discount applied for 5+ years subscription!' : '15% discount applied for 3-4 years subscription!'}
+                  10% discount applied for 3 or more licenses!
+                </p>
+              )}
+              {planType === "group" && years < 3 && (
+                <p className="text-sm text-gray-400">
+                  Add more subscription year to get special price!
+                </p>
+              )}
+              {planType === "group" && years >= 3 && (
+                <p className="text-sm text-green-400">
+                  {years >= 5
+                    ? "20% discount applied for 5+ years subscription!"
+                    : "10% discount applied for 3-4 years subscription!"}
+                </p>
+              )}
+              {planType === "business" && years >= 3 && (
+                <p className="text-sm text-green-400">
+                  {years >= 5
+                    ? "25% discount applied for 5+ years subscription!"
+                    : "15% discount applied for 3-4 years subscription!"}
                 </p>
               )}
             </div>
@@ -280,110 +315,157 @@ const CheckoutForm: React.FC = () => {
           <div className="md:w-1/2">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="block mb-2">Email</label>
-                <input 
-                  type="email" 
-                  id="email" 
+                <label htmlFor="email" className="block mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  required 
-                  className="w-full p-2 rounded bg-gray-700 text-white" 
+                  required
+                  className="w-full p-2 rounded bg-gray-700 text-white"
                 />
-                {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
+                {formErrors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.email}
+                  </p>
+                )}
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block mb-2">First Name</label>
-                  <input 
-                    type="text" 
-                    id="firstName" 
+                  <label htmlFor="firstName" className="block mb-2">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    required 
-                    className="w-full p-2 rounded bg-gray-700 text-white" 
+                    required
+                    className="w-full p-2 rounded bg-gray-700 text-white"
                   />
-                  {formErrors.firstName && <p className="text-red-500 text-sm mt-1">{formErrors.firstName}</p>}
+                  {formErrors.firstName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.firstName}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block mb-2">Last Name</label>
-                  <input 
-                    type="text" 
-                    id="lastName" 
+                  <label htmlFor="lastName" className="block mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    required 
-                    className="w-full p-2 rounded bg-gray-700 text-white" 
+                    required
+                    className="w-full p-2 rounded bg-gray-700 text-white"
                   />
-                  {formErrors.lastName && <p className="text-red-500 text-sm mt-1">{formErrors.lastName}</p>}
+                  {formErrors.lastName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.lastName}
+                    </p>
+                  )}
                 </div>
               </div>
-              
+
               <div>
-                <label htmlFor="address" className="block mb-2">Address</label>
-                <input 
-                  type="text" 
-                  id="address" 
+                <label htmlFor="address" className="block mb-2">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  id="address"
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  required 
-                  className="w-full p-2 rounded bg-gray-700 text-white" 
+                  required
+                  className="w-full p-2 rounded bg-gray-700 text-white"
                 />
-                {formErrors.address && <p className="text-red-500 text-sm mt-1">{formErrors.address}</p>}
+                {formErrors.address && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.address}
+                  </p>
+                )}
               </div>
-              
+
               <div>
-                <label htmlFor="country" className="block mb-2">Country</label>
-                <select 
-                  id="country" 
+                <label htmlFor="country" className="block mb-2">
+                  Country
+                </label>
+                <select
+                  id="country"
                   name="country"
                   value={formData.country}
                   onChange={handleInputChange}
-                  required 
+                  required
                   className="w-full p-2 rounded bg-gray-700 text-white"
                 >
                   <option value="">Select a country</option>
-                  {countries.map(country => (
-                    <option key={country} value={country}>{country}</option>
+                  {countries.map((country) => (
+                    <option key={country} value={country}>
+                      {country}
+                    </option>
                   ))}
                 </select>
-                {formErrors.country && <p className="text-red-500 text-sm mt-1">{formErrors.country}</p>}
+                {formErrors.country && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {formErrors.country}
+                  </p>
+                )}
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="city" className="block mb-2">City</label>
-                  <input 
-                    type="text" 
-                    id="city" 
+                  <label htmlFor="city" className="block mb-2">
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    id="city"
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    required 
-                    className="w-full p-2 rounded bg-gray-700 text-white" 
+                    required
+                    className="w-full p-2 rounded bg-gray-700 text-white"
                   />
-                  {formErrors.city && <p className="text-red-500 text-sm mt-1">{formErrors.city}</p>}
+                  {formErrors.city && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.city}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="zipCode" className="block mb-2">Zip Code</label>
-                  <input 
-                    type="text" 
-                    id="zipCode" 
+                  <label htmlFor="zipCode" className="block mb-2">
+                    Zip Code
+                  </label>
+                  <input
+                    type="text"
+                    id="zipCode"
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleInputChange}
-                    required 
-                    className="w-full p-2 rounded bg-gray-700 text-white" 
+                    required
+                    className="w-full p-2 rounded bg-gray-700 text-white"
                   />
-                  {formErrors.zipCode && <p className="text-red-500 text-sm mt-1">{formErrors.zipCode}</p>}
+                  {formErrors.zipCode && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.zipCode}
+                    </p>
+                  )}
                 </div>
               </div>
-              
-              <button type="submit" className="bg-cyan-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-cyan-500 transition duration-300">
+
+              <button
+                type="submit"
+                className="bg-cyan-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-cyan-500 transition duration-300"
+              >
                 Complete Purchase
               </button>
             </form>

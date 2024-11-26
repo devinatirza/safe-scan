@@ -138,7 +138,6 @@ const AboutUs: React.FC = () => {
     <div className="bg-gray-900 text-gray-100 w-dvw">
       <Navbar activeItem="About Us" />
 
-      {/* Hero Section */}
       <header className="relative py-20 bg-gradient-to-b from-gray-800 to-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
@@ -152,7 +151,6 @@ const AboutUs: React.FC = () => {
         </div>
       </header>
 
-      {/* Stats Section */}
       <section className="py-16 bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -172,7 +170,6 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Company Values */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
@@ -190,7 +187,6 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Company Overview */}
       <section className="py-16 bg-gray-800">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -254,11 +250,9 @@ const AboutUs: React.FC = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Information */}
             <div>
               <h2 className="text-3xl font-bold mb-8">Get in Touch</h2>
               <p className="text-gray-300 mb-8">
@@ -314,7 +308,6 @@ const AboutUs: React.FC = () => {
               </div>
             </div>
 
-            {/* Contact Form */}
             <div>
               <div className="bg-gray-800 p-6 rounded-lg">
                 <h3 className="text-2xl font-semibold mb-6">
@@ -422,7 +415,6 @@ const AboutUs: React.FC = () => {
                   </button>
                 </form>
 
-                {/* Success Message */}
                 {showSuccess && (
                   <div className="mt-4 p-4 bg-green-900 bg-opacity-50 rounded-lg flex items-center">
                     <CheckCircle2 className="text-green-400 w-5 h-5 mr-2" />
