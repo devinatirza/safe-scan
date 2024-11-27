@@ -98,6 +98,13 @@ const DeviceModal: React.FC<{
       isOpen: false,
       level: device.protectionLevel,
     });
+  
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+  
 
   const [showScanAlert, setShowScanAlert] = useState(false);
   const [showPauseAlert, setShowPauseAlert] = useState(false);
@@ -133,10 +140,20 @@ const DeviceModal: React.FC<{
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+        onClick={handleBackdropClick}
+      >
         <div className="bg-gray-800 rounded-lg max-w-lg w-full p-6 relative animate-fade-in">
 
-          <div className="space-y-3">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={25} />
+          </button>
+
+          <div className="space-y-3 mt-7">
             <ActionButton
               icon={<RefreshCw className="text-cyan-400 mr-3" size={20} />}
               label="Scan Device"
@@ -327,3 +344,4 @@ const ProtectedDevices: React.FC = () => {
 };
 
 export default ProtectedDevices;
+
