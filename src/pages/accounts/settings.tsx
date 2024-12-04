@@ -440,12 +440,17 @@ const UpdateProfileModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   currentProfile: ProfileInfo;
-}> = ({ isOpen, onClose, currentProfile }) => {
+  setProfile: (profile: ProfileInfo) => void
+}> = ({ isOpen, onClose, currentProfile, setProfile }) => {
   const [formData, setFormData] = useState(currentProfile);
+  const user = useUser();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle profile update logic here
+
+    user.changeProfile(formData.email, formData.firstName, formData.lastName)
+    setProfile(formData)
+
     onClose();
   };
 
@@ -576,15 +581,6 @@ const UpdatePasswordModal: React.FC<{
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const updatedUsers = users.map((u: any) => {
-        if (u.email === user?.email) {
-          return { ...u, password: formData.newPassword };
-        }
-        return u;
-      });
-      localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
-      
       updatePassword(formData.newPassword);
       
       onClose();
@@ -679,7 +675,7 @@ const AccountSettings: React.FC = () => {
   const [isUpdatePaymentModalOpen, setIsUpdatePaymentModalOpen] = useState(false);
   const { user } = useUser();
 
-  const [profileInfo] = useState<ProfileInfo>({
+  const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
     email: user?.email || "",
     firstName: user?.name.split(' ')[0] || "",
     lastName: user?.name.split(' ')[1] || ""
@@ -820,6 +816,7 @@ const AccountSettings: React.FC = () => {
         isOpen={isUpdateProfileModalOpen}
         onClose={() => setIsUpdateProfileModalOpen(false)}
         currentProfile={profileInfo}
+        setProfile={setProfileInfo}
       />
 
       <UpdatePasswordModal

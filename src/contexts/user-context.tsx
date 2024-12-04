@@ -11,6 +11,7 @@ interface UserContextType {
   login: (user: User) => void;
   logout: () => void;
   updatePassword: (newPassword: string) => void;
+  changeProfile: (email: string, first: string, last: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -36,11 +37,35 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const updatedUser = { ...user, password: newPassword };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
+      const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      const updatedUsers = users.map((u: any) => {
+        if (u.email === user?.email) {
+          return { ...u, password: newPassword };
+        }
+        return u;
+      });
+      localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
+    }
+  };
+
+  const changeProfile = (email: string, first: string, last: string) => {
+    if (user) {
+      const updatedUser = { ...user, email: email, name: first + " " + last };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      const updatedUsers = users.map((u: any) => {
+        if (u.email === user?.email) {
+          return { ...u, email: email, name: first + " " + last };
+        }
+        return u;
+      });
+      localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
     }
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout, updatePassword }}>
+    <UserContext.Provider value={{ user, login, logout, updatePassword, changeProfile }}>
       {children}
     </UserContext.Provider>
   );
