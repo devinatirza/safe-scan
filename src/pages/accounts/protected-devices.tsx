@@ -251,7 +251,7 @@ const ProtectedDevices: React.FC = () => {
 
   const devices: Device[] = [
     {
-      name: "Flora's Macbook",
+      name: "Macbook",
       type: "MacOS",
       lastActive: "Active now",
       status: "Protected",

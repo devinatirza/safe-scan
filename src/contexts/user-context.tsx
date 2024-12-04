@@ -1,82 +1,55 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-import { IUser } from "../interfaces/user-interface";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const userContext = createContext({} as any);
+interface User {
+  name: string;
+  email: string;
+  password: string
+}
 
-type ContentLayout = {
-  children: JSX.Element;
-};
+interface UserContextType {
+  user: User | null;
+  login: (user: User) => void;
+  logout: () => void;
+  updatePassword: (newPassword: string) => void;
+}
 
-export function UserProvider({ children }: ContentLayout) {
-  const [user, setUser] = useState<IUser | null>(() => {
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
-  const ip = 'localhost';
 
-  function updateUser(user: IUser | null) {
-    setUser(user);
+  const login = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
+
+  const updatePassword = (newPassword: string) => {
     if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }
-
-  async function login(email: string, pass: string) {
-    try {
-      const response = await axios.post(`http://localhost:8000/login`, {
-        email: email,
-        pass: pass
-      }, {
-        withCredentials: true
-      });
-
-      if (response.status === 200) {
-        setUser(response.data);
-        localStorage.setItem('user', JSON.stringify(response.data));
-        return '';
-      } else {
-        return 'An error occurred.';
-      }
-    } catch (error) {
-      return error.response?.data.error;
-    }
-  }
-
-  const validate = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8000/validate`, {
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      return null;
+      const updatedUser = { ...user, password: newPassword };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
 
-  useEffect(() => {
-    validate()
-      .then((res: IUser) => {
-        if (res && !user) {
-          updateUser(res);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  function isAuth() {
-    return user !== null;
-  }
-
-  const data = { user, login, updateUser, validate, isAuth, ip };
-
-  return <userContext.Provider value={data}>{children}</userContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, login, logout, updatePassword }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export function useUser() {
-  return useContext(userContext);
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
 }

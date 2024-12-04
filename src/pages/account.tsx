@@ -4,13 +4,13 @@ import Navbar from "../components/navbar";
 import AccountOverview from '../pages/accounts/overview';
 import ProtectedDevices from '../pages/accounts/protected-devices';
 import AccountSettings from '../pages/accounts/settings';
+import { useUser } from '../contexts/user-context';
 
 const Account: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'devices' | 'settings'>('overview');
+  const { user } = useUser();
 
   const userData = {
-    name: "Flora Zeith",
-    email: "flora.zeit@example.com",
     plan: "Group (3-5 users)",
     subscriptionStatus: "Active",
     renewalDate: "December 11, 2024",
@@ -43,8 +43,8 @@ const Account: React.FC = () => {
                 <User size={32} />
               </div>
               <div className="ml-4">
-                <h1 className="text-2xl font-bold">{userData.name}</h1>
-                <p className="text-gray-400">{userData.email}</p>
+                <h1 className="text-2xl font-bold">{user?.name}</h1>
+                <p className="text-gray-400">{user?.email}</p>
               </div>
             </div>
             <div className="text-right">

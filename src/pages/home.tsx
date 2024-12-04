@@ -57,10 +57,6 @@ const Home: React.FC = () => {
     { quote: "SafeScan's regular updates give me confidence that I'm always protected against the latest threats.", author: "Robert Wilson", role: "Retired Teacher" },
   ];
 
-  // const toggleMenu = () => {
-  //   setIsMenuOpen(!isMenuOpen);
-  // };
-
   const totalSlides = Math.ceil(reviews.length / 2);
 
   useEffect(() => {

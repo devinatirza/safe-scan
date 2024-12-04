@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { User, Lock, Bell, CreditCard, LogOut, ChevronRight, X, CreditCardIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../contexts/user-context";
 
 interface ProfileInfo {
   email: string;
   firstName: string;
   lastName: string;
-  address: string;
-  country: string;
-  city: string;
-  zipCode: string;
 }
 
 interface NotificationSettings {
@@ -38,11 +35,13 @@ const LogoutModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   onClose,
 }) => {
   const navigate = useNavigate();
+  const { logout } = useUser(); 
 
   const handleLogout = () => {
+    logout();
     setTimeout(() => {
       onClose();
-      navigate("/");
+      navigate("/login");
     }, 1500);
   };
 
@@ -108,27 +107,6 @@ const ProfileInfoDropdown: React.FC<{
             <p className="text-sm text-gray-400">Last Name</p>
             <p className="font-medium">{profileInfo.lastName}</p>
           </div>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-400">Address</p>
-          <p className="font-medium">{profileInfo.address}</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-400">Country</p>
-            <p className="font-medium">{profileInfo.country}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-400">City</p>
-            <p className="font-medium">{profileInfo.city}</p>
-          </div>
-        </div>
-
-        <div>
-          <p className="text-sm text-gray-400">ZIP Code</p>
-          <p className="font-medium">{profileInfo.zipCode}</p>
         </div>
 
         <button
@@ -319,7 +297,6 @@ const UpdatePaymentModal: React.FC<{
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle payment method update logic here
     onClose();
   };
 
@@ -476,15 +453,15 @@ const UpdateProfileModal: React.FC<{
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-lg max-w-2xl w-full relative animate-fade-in">
+      <div className="bg-gray-800 rounded-lg max-w-md w-full relative animate-fade-in">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
         >
           <X size={20} />
         </button>
 
-        <div className="p-6">
+        <div className="p-8">
           <h2 className="text-2xl font-bold mb-6">Update Profile</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -502,9 +479,7 @@ const UpdateProfileModal: React.FC<{
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  First Name
-                </label>
+                <label className="block text-sm font-medium mb-2">First Name</label>
                 <input
                   type="text"
                   value={formData.firstName}
@@ -515,66 +490,12 @@ const UpdateProfileModal: React.FC<{
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Last Name
-                </label>
+                <label className="block text-sm font-medium mb-2">Last Name</label>
                 <input
                   type="text"
                   value={formData.lastName}
                   onChange={(e) =>
                     setFormData({ ...formData, lastName: e.target.value })
-                  }
-                  className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Address</label>
-              <input
-                type="text"
-                value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-1">
-                <label className="block text-sm font-medium mb-2">
-                  Country
-                </label>
-                <input
-                  type="text"
-                  value={formData.country}
-                  onChange={(e) =>
-                    setFormData({ ...formData, country: e.target.value })
-                  }
-                  className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                />
-              </div>
-              <div className="col-span-1">
-                <label className="block text-sm font-medium mb-2">City</label>
-                <input
-                  type="text"
-                  value={formData.city}
-                  onChange={(e) =>
-                    setFormData({ ...formData, city: e.target.value })
-                  }
-                  className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  ZIP Code
-                </label>
-                <input
-                  type="text"
-                  value={formData.zipCode}
-                  onChange={(e) =>
-                    setFormData({ ...formData, zipCode: e.target.value })
                   }
                   className="w-full p-3 rounded bg-gray-700 text-white border border-gray-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
                 />
@@ -603,20 +524,71 @@ const UpdateProfileModal: React.FC<{
   );
 };
 
+
 const UpdatePasswordModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
+  const { user, updatePassword } = useUser();
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+  const [formErrors, setFormErrors] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const validateForm = (): boolean => {
+    const errors = {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    };
+
+    const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    const currentUser = users.find((u: any) => u.email === user?.email);
+    
+    if (!formData.currentPassword) {
+      errors.currentPassword = "Current password is required";
+    } else if (currentUser?.password !== formData.currentPassword) {
+      errors.currentPassword = "Current password is incorrect";
+    }
+
+    if (!formData.newPassword) {
+      errors.newPassword = "New password is required";
+    } else if (formData.newPassword.length < 6) {
+      errors.newPassword = "Password must be at least 6 characters";
+    }
+
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = "Please confirm your new password";
+    } else if (formData.newPassword !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setFormErrors(errors);
+    return !Object.values(errors).some(error => error !== "");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle password update logic here
-    onClose();
+    if (validateForm()) {
+      const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      const updatedUsers = users.map((u: any) => {
+        if (u.email === user?.email) {
+          return { ...u, password: formData.newPassword };
+        }
+        return u;
+      });
+      localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
+      
+      updatePassword(formData.newPassword);
+      
+      onClose();
+    }
   };
 
   if (!isOpen) return null;
@@ -705,15 +677,12 @@ const AccountSettings: React.FC = () => {
   const [isUpdatePasswordModalOpen, setIsUpdatePasswordModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isUpdatePaymentModalOpen, setIsUpdatePaymentModalOpen] = useState(false);
+  const { user } = useUser();
 
   const [profileInfo] = useState<ProfileInfo>({
-    email: "flora.zeit@example.com",
-    firstName: "Flora",
-    lastName: "Zeith",
-    address: "1112 FZ Street",
-    country: "Republic of Fazoria",
-    city: "Zaffira City",
-    zipCode: "11122",
+    email: user?.email || "",
+    firstName: user?.name.split(' ')[0] || "",
+    lastName: user?.name.split(' ')[1] || ""
   });
 
   const [securitySettings, setSecuritySettings] = useState<SecuritySettings>({
