@@ -259,7 +259,7 @@ const ProtectedDevices: React.FC = () => {
       protectionLevel: "High",
     },
     {
-      name: "iPhone 14",
+      name: "iPhone 14 Pro",
       type: "Mobile",
       lastActive: "2 hours ago",
       status: "Update Required",

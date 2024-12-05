@@ -124,7 +124,7 @@ const Product: React.FC = () => {
   const businessPlans = [
     {
       name: "Small Business",
-      price: "$119.99/year per device",
+      price: "$139.99/year",
       description: "Tailored for small businesses and startups",
       features: [
         "Protection for up to 10 devices",
@@ -138,7 +138,7 @@ const Product: React.FC = () => {
     },
     {
       name: "Medium Business",
-      price: "$39.99/year per device",
+      price: "$339.99/year",
       description: "Ideal for growing businesses",
       features: [
         "All Small Business features",
