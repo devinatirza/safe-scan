@@ -228,7 +228,7 @@ const AboutUs: React.FC = () => {
                 <Building className="text-cyan-400 w-8 h-8 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">Headquarters</h3>
                 <p className="text-gray-300">
-                  Zaffira City, Republic of Fazoria
+                  Menara Cyber, Indonesia
                 </p>
               </div>
               <div className="bg-gray-900 p-6 rounded-lg">
@@ -275,7 +275,7 @@ const AboutUs: React.FC = () => {
                   <Phone className="text-cyan-400 w-6 h-6 mt-1" />
                   <div>
                     <h3 className="font-semibold mb-1">Contact Us</h3>
-                    <p className="text-gray-300 mb-1">+11 (112) 111-223</p>
+                    <p className="text-gray-300 mb-1">+62112111223</p>
                     <a
                       href="https://wa.me/628975611789"
                       target="_blank"
@@ -297,11 +297,11 @@ const AboutUs: React.FC = () => {
                   <div>
                     <h3 className="font-semibold mb-1">Visit Us</h3>
                     <p className="text-gray-300">
-                      1112 Security Street
+                      Jl Menteng Granit No.18
                       <br />
-                      Zaffira City, FZ 11223
+                      Jakarta, JA 13324
                       <br />
-                      Republic of Fazoria
+                      Republic of Indonesia
                     </p>
                   </div>
                 </div>
